@@ -1,0 +1,216 @@
+<ion-header *ngIf="check" mode="ios">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button text="{{ 'GLOBAL.BACK' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'BILL.CHECK' | translate }}</ion-title>
+    <ion-buttons mode="ios" style="padding-right: 15px;" slot="primary">
+      <!-- {{ userTotal | price }} -->
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar  style="padding-bottom: 5px;">
+    <ion-segment (ionChange)="segmentChanged($event)"  value="orders" style="width: -webkit-fill-available; margin: 0 12px;">
+      <ion-segment-button value="orders" layout="icon-start">
+        <ion-label>{{ 'PAYMENT.ORDERS' | translate }}</ion-label>
+        <ion-icon style="margin-right: 2px;" name="receipt"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="check" layout="icon-start">
+        <ion-label> {{ 'BILL.CHECK' | translate }}</ion-label>
+        <ion-icon style="margin-right: 2px;" name="reader"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="payments" layout="icon-start">
+        <ion-label> {{ 'PAYMENT.PAYMENTS' | translate }}</ion-label>
+        <ion-icon style="margin-right: 2px;" name="card"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-progress-bar *ngIf="!isLoaded" style="height:100vh; position: fixed;" color="warning" type="indeterminate"></ion-progress-bar>
+  <!-- <ion-card *ngIf="isLoaded && checkItems.length > 0 && selectedSegment == 'orders'" mode="ios" class="fade-in" style="min-height: -webkit-fill-available;">
+    <ion-item mode="md" color="white" lines="full">
+      <ion-icon color="dark" name="receipt-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label>{{ 'PAYMENT.ORDERS' | translate }}</ion-label>
+      <ion-note style="font-size: medium; font-weight: bold; padding-top: 12px;" slot="end">{{checkItems.length}} Adet</ion-note>
+    </ion-item>
+    <ion-list>
+      <ion-item-group *ngFor="let item of checkItems; let i = index;">
+        <ion-item-divider color="{{ (item.status == 0 ? 'warning' : item.status == 1 ? 'secondary' : item.status == 2 ? 'primary' : item.status == 3 ? 'danger' : item.status == 4 ? 'success' : 'dark' ) }}">
+          <ion-label style="font-size: smaller;">
+            {{item.user.name | titlecase}}
+            <small> - {{ statusNote(item.status)}}</small>
+          </ion-label>
+          <ion-icon slot="end" style="padding-right: 5px;" name="time-outline"></ion-icon>
+          <ion-label slot="end" style="padding-right: 10px; font-size: smaller;"> {{item.timestamp | date: 'HH:mm'}}</ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let product of item.items; let i = index;">
+          <ion-label style="font-size: small; font-weight: bold; white-space: pre-line; overflow: visible;">
+            {{product.name | titlecase }} {{product.type | titlecase}}
+            <p><small>{{product.note}}</small></p>
+          </ion-label>
+          <ion-note slot="end" style="font-weight: bold; font-size: smaller;" size="large">{{ product.price | price }}</ion-note>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+  </ion-card> -->
+
+  <ng-container *ngIf="isLoaded && checkItems.length > 0 && selectedSegment == 'orders'">
+    <ion-card mode="ios" *ngFor="let item of checkItems; let i = index;" class="fade-in">
+      <ion-item mode="md" color="white" lines="full">
+        <ion-icon name="person-circle-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{item.user.name | titlecase}}</ion-label>
+        <ion-note slot="end">{{item.timestamp | date:'dd/M/y' }}</ion-note>
+      </ion-item>
+      <ion-list>
+        <ion-item-group>
+          <ion-item-divider color="{{ (item.status == 0 ? 'warning' : item.status == 1 ? 'secondary' : item.status == 2 ? 'primary' : item.status == 3 ? 'danger' : item.status == 4 ? 'success' : 'dark' ) }}">
+            <ion-label style="font-size: smaller;">{{ statusNote(item.status)}}</ion-label>
+            <ion-icon slot="end" style="padding-right: 5px;" name="time-outline"></ion-icon>
+            <ion-label slot="end" style="padding-right: 10px; font-size: smaller;"> {{item.timestamp | date: 'HH:mm'}}</ion-label>
+          </ion-item-divider>
+          <ion-item *ngFor="let product of item.items; let i = index;" lines="full">
+            <ion-label style="font-size: small; font-weight: bold; white-space: pre-line; overflow: visible;">
+              {{product.name | titlecase }} {{product.type | titlecase}}
+              <p><small>{{product.note}}</small></p>
+            </ion-label>
+            <ion-note slot="end" style="font-weight: bold; font-size: smaller;" size="large">{{ product.price | price }}</ion-note>
+          </ion-item>
+        </ion-item-group>
+      </ion-list>
+      <ion-item lines="none">
+        <ion-label style="font-weight: bold;">{{ orderTotal(item) | price }}</ion-label>
+        <ion-button *ngIf="item.status == 0" (click)="removeOrder(item)" style="margin:0" fill="outline" color="danger" slot="end">
+          <ion-icon style="margin-right:2px;" name="close-circle-outline"></ion-icon>
+          {{ 'PRODUCT.CANCEL' | translate }}
+        </ion-button>
+        <ion-button *ngIf="item.status == 2 || item.status == 4" (click)="repeatOrder(item)" fill="outline" slot="end">
+          <ion-icon style="margin-right:2px;" name="refresh-outline"></ion-icon>
+          {{ 'BASKET.REPEAT_ORDER' | translate }}
+        </ion-button>
+      </ion-item>
+    </ion-card>
+  </ng-container>
+
+  <ion-card *ngIf="isLoaded && checkItems.length > 0 && selectedSegment == 'check'" mode="ios" class="fade-in" style="min-height: -webkit-fill-available;">
+    <ion-item mode="md" color="white" lines="full">
+      <ion-icon color="dark" name="reader-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label>{{ 'BILL.BILL' | translate }}</ion-label>
+      <ion-note style="font-size: medium; font-weight: bold; padding-top: 12px;" slot="end">{{ payedTotal + checkTotal | price}}</ion-note>
+    </ion-item>
+    <ion-list mode="ios">
+      <ion-item-divider *ngIf="checkView.length > 0" color="dark">
+        <ion-label style="font-size: smaller;">
+          Kalan Ürünler
+        </ion-label>
+        <ion-label slot="end" style="padding-right: 10px; font-size: smaller;"> {{ checkTotal | price}}</ion-label>
+      </ion-item-divider>
+      <ion-item-group *ngFor="let item of checkView; let i = index;">
+        <ion-item lines="full">
+          <ion-note slot="start" style="margin-right: 5px; font-weight: bold; font-size: smaller;">{{item.count}} x</ion-note>
+          <ion-label style="font-size: 12px; font-weight: bold; white-space: pre-line; overflow: visible;">
+            {{item.name | titlecase}} {{item.type | titlecase}}
+          </ion-label>
+          <ion-note slot="end" style="font-weight: bold; font-size: smaller;">{{ (item.price*item.count) | price }}</ion-note>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+    <ion-list *ngIf="payedView.length > 0" mode="ios">
+      <ion-item-divider color="dark">
+        <ion-label style="font-size: smaller;">
+          Ödenen Ürünler
+        </ion-label>
+        <ion-label slot="end" style="padding-right: 10px; font-size: smaller;"> {{ payedTotal | price}}</ion-label>
+      </ion-item-divider>
+      <ion-item-group *ngFor="let item of payedView; let i = index;">
+        <ion-item lines="full">
+          <ion-note slot="start" style="margin-right: 5px; font-weight: bold; font-size: smaller;">{{item.count}} x</ion-note>
+          <ion-label style="font-size: 12px; font-weight: bold; white-space: pre-line; overflow: visible;">
+            {{item.name | titlecase}} {{item.type | titlecase}}
+          </ion-label>
+          <ion-note slot="end" style="font-weight: bold; font-size: smaller;">{{ (item.price*item.count) | price }}</ion-note>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+  </ion-card>
+
+  <ion-card *ngIf="isLoaded && checkItems.length > 0 && selectedSegment == 'payments'" mode="ios" class="fade-in" style="min-height: -webkit-fill-available;">
+    <ion-item mode="md" color="white" lines="full">
+      <ion-icon color="dark" name="card-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label>{{ 'PAYMENT.PAYMENTS' | translate }}</ion-label>
+      <ion-note style="font-size: medium; font-weight: bold; padding-top: 12px;" slot="end">{{receiptsView.length}} Adet</ion-note>
+    </ion-item>
+
+
+    <ion-list *ngIf="receiptsView.length > 0">
+      <ion-item-group *ngFor="let item of receiptsView; let i = index;">
+        <!-- <ion-item-divider color="{{ (item.status == 0 ? 'warning' : item.status == 1 ? 'secondary' : item.status == 2 ? 'primary' : item.status == 3 ? 'danger' : item.status == 4 ? 'success' : 'dark' ) }}">
+          <ion-label style="font-size: smaller;">
+            {{item.user.name | titlecase}}
+          </ion-label>
+          <ion-label slot="end" style="padding-right: 10px; font-size: smaller;">{{item.timestamp |  date: 'HH:mm' }}</ion-label>
+        </ion-item-divider> -->
+        <ion-item lines="full">
+          <!-- color="{{ ( item?.status < 2 ? 'warning' : item?.status == 3 ? 'success' : item?.status == 4 ? 'danger' : 'primary' ) }} }}" -->
+          <ion-icon slot="start" name="{{ ( item?.method == 1 ? 'cash-outline' : item?.method == 2 ? 'card-outline' : item?.method == 3 ? 'bookmark-outline' : item?.method == 4 ? 'wallet-outline' : item?.method == 5 ? 'logo-bitcoin' : 'calucator-outline') }}"></ion-icon>
+          <ion-label  style="font-size: 12px; font-weight: bold; white-space: pre-line; overflow: visible;">
+            {{item.user.name | titlecase}}
+            <br>
+            <ion-note>{{ paymentNote(item.method) | titlecase}}</ion-note>
+            <!-- <span></span> -->
+          </ion-label>
+          <!-- <ion-note slot="start" style="font-weight: bold; font-size: x-small;">
+            
+          </ion-note> -->
+          <ion-note slot="end" style="font-weight: bold; font-size: smaller;">
+            {{ item.total | price }}
+          </ion-note>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+  </ion-card>
+
+  <ion-card *ngIf="isLoaded && checkItems.length == 0" mode="ios" style="min-height: -webkit-fill-available;">
+    <ion-card-header style="text-align: center; padding-top: 100px;">
+      <ion-icon name="receipt-outline" color="primary" style="font-size: xxx-large; margin-bottom: 10px;"></ion-icon>
+      <ion-card-subtitle>{{'ORDER_LIST.NOT_ORDER_YET' | translate}}</ion-card-subtitle>
+      <!-- <ion-card-title>Bize Yorum Bırakın !</ion-card-title> -->
+    </ion-card-header>
+    <!-- <ion-card-content style="text-align: center;">
+      <p><small>Yorumlarınız bizim için önemli.</small></p>
+      <p><small>Geri bildiriminiz için şimdiden teşekkürler.</small></p>
+    </ion-card-content> -->
+  </ion-card>
+</ion-content>
+
+<ion-footer *ngIf="isLoaded && checkItems.length > 0" mode="md" class="fade-in">
+  <ion-toolbar style="border-bottom: 1px solid darkgray;">
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon slot="icon-only" name="person-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="padding-left: 0px;">
+      <p style="margin:0; font-size: xx-small;">Senin Hesabın:</p>
+      <p style="margin:0; font-size: smaller;">{{user.name}}</p>
+    </ion-title>
+    <ion-title slot="end">{{ userTotal | price }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon slot="icon-only" name="calculator"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="padding-left: 0px;">
+      <p style="margin:0; font-size: xx-small;">Kalan Hesap Toplamı:</p>
+      <p style="margin:0; font-size: smaller;">{{ checkTotal | price }}</p>
+    </ion-title>
+    <ion-buttons *ngIf="checkItems.length > 0" slot="primary" style="padding-right: 10px;">
+      <ion-button size="large" [disabled]="checkTotal == 0" (click)="callForCheck()" fill="solid" color="success">
+        {{ 'BILL.REQ_CHECK' | translate }}
+        <ion-icon slot="end" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,152 @@
+<ion-header [translucent]="true" mode="ios">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()" >
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{product.name | titlecase }}</ion-title>
+    <ion-label slot="end" style="padding-right: 15px;">
+      {{orderPrice | price }}
+    </ion-label>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- <ion-item-divider color="dark" mode="md">
+    <ionic5-star-rating style="margin-top: 5px;" #rating activeIcon="star" defaultIcon="star-outline" activeColor="#488aff" defaultColor="#f4f4f4" readonly="true" rating="3.5" fontSize="20px">
+    </ionic5-star-rating>
+    <ion-button style="margin-top: 5px; padding-right: 15px;" fill="outline" slot="end">Yorumlar</ion-button>
+  </ion-item-divider> -->
+  <div *ngIf="product.image" class="image-holder">
+    <!-- <ion-skeleton-text animated style="position: absolute; top:0; left:0; right: 0; bottom: 0; margin: 0;"></ion-skeleton-text> -->
+    <img src="https://cdn.quickly.com.tr/quickly-menu/{{slug}}{{product.image}}">
+  </div>
+  <ion-card mode="ios">
+    <ion-card-header>
+      <ion-card-subtitle>{{product.name}} {{selectedType}}</ion-card-subtitle>
+      <ion-card-title>
+        {{orderPrice | price }}
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="product.description.length > 0">
+      {{product.description}}
+      <br>
+    </ion-card-content>
+
+    <ng-container *ngIf="product.allergens && product.allergens.length > 0">
+      <ion-item mode="md" lines="full">
+        <ion-icon name="alert-circle-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.ALERGENICS' | translate }}:</ion-label>
+        <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{product.allergens.length}} {{ 'PRODUCT.QUANTITY' | translate }}</ion-note>
+      </ion-item>
+      <p style="padding: 0px 10px; margin: 5px 0px;">
+        <ion-chip *ngFor="let item of productAllergenics(product.allergens)" mode="md" [color]="item.color">
+          <ion-avatar>
+            <img src="/assets/allergens/{{item.icon}}">
+          </ion-avatar>
+          <ion-label>{{ item.name | translate }}</ion-label>
+        </ion-chip>
+      </p>
+    </ng-container>
+
+
+    <ion-radio-group *ngIf="product.options !== undefined && product.options.length > 0" mode="ios" [value]="product.options[0].name">
+      <!-- <ion-list-header>
+        <ion-label style="margin-top:0px; font-size: smaller;"></ion-label>
+      </ion-list-header> -->
+
+      <ion-item mode="md" lines="full">
+        <ion-icon name="pricetags-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.ORDER_TYPE' | translate }}:</ion-label>
+        <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{selectedType}}</ion-note>
+      </ion-item>
+      <ion-item *ngFor="let opts of product.options" (click)="orderPrice = opts.price; selectedType = opts.name">
+        <ion-label>{{opts.name}}</ion-label>
+        <ion-note>{{opts.price | price}}</ion-note>
+        <ion-radio slot="start" value="{{opts.name}}"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <section *ngIf="isOrderOpen || isPreOrderOpen">
+      <ion-item mode="md" lines="full">
+        <ion-icon name="chatbubble-ellipses-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.ORDER_NOTE' | translate }}:</ion-label>
+        <!-- <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{orderCount}} Adet</ion-note> -->
+      </ion-item>
+
+      <ion-item mode="md">
+        <!-- <ion-label position="floating">Sipariş Notu:</ion-label> -->
+        <ion-input placeholder="{{ 'PRODUCT.ORDER_NOTE_HOLDER' | translate }}" (change)="orderNote = $event.target.value"></ion-input>
+      </ion-item>
+
+      <ion-item mode="md" lines="full">
+        <ion-icon name="duplicate-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.ITEM_COUNT' | translate }}:</ion-label>
+        <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{orderCount}} {{ 'PRODUCT.QUANTITY' | translate }}</ion-note>
+      </ion-item>
+
+      <ion-grid>
+        <!-- <ion-row>
+          <ion-list-header>
+            <ion-label style="margin-top:0px; font-size: smaller;">Sipariş Adedi:</ion-label>
+          </ion-list-header>
+        </ion-row> -->
+        <ion-row style="padding:5px;">
+          <ion-col width="33%" class="ion-align-self-start" style="padding-left: 5px;">
+            <ion-button mode="md" size="large" color="danger" fill="outline" (click)="decrementCount()" style=" width: 100%; ">
+              <ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col width="33%" class="ion-align-self-center">
+            <ion-button size="large" mode="md" fill="outline" style=" width: 100%;">
+              {{orderCount}}
+            </ion-button>
+          </ion-col>
+          <ion-col width="33%" class="ion-align-self-end" style="padding-right: 10px;">
+            <ion-button size="large" mode="md" color="success" fill="outline" (click)="incrementCount()" style=" width: 100%;">
+              <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item mode="md" lines="full">
+        <ion-icon name="calculator-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.TOTAL' | translate }}:</ion-label>
+        <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{orderCount*orderPrice | price}}</ion-note>
+      </ion-item>
+
+      <!-- *ngIf="product.is_available" -->
+      <ion-item mode="md" lines="none">
+        <ion-icon name="cube-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.STOCK_STATUS' | translate }}:</ion-label>
+        <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{ (product.is_available ? 'PRODUCT.AVAILABLE' : 'PRODUCT.NOT_AVAILABLE') | translate  }}</ion-note>
+      </ion-item>
+
+      <ion-button mode="ios" [disabled]="product.is_hidden || !product.is_available" style="margin:17px;" expand="block" (click)="sendOrder()" fill="solid" color="{{ ( isPreOrderOpen ? 'warning' : 'success' )}}">
+         {{ ( isPreOrderOpen ? 'PRODUCT.ADD_LIST' : 'PRODUCT.SEND' )  | translate }}
+        <!-- <ion-icon slot="end" name="checkmark"></ion-icon> -->
+      </ion-button>
+
+
+      
+
+    </section>
+
+
+
+  </ion-card>
+</ion-content>
+
+<!-- <ion-footer *ngIf="isOrderOpen">
+  <ion-toolbar mode="md" color="dark">
+    <ion-title>Toplam: {{orderCount*orderPrice | price}}</ion-title>
+    <ion-buttons slot="primary" style="padding-right: 10px;">
+      <ion-button size="large" (click)="sendOrder()" fill="solid" color="success">
+        Sipariş Ver
+        <ion-icon slot="end" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer> -->

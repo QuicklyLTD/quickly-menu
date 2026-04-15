@@ -1,0 +1,42 @@
+<ion-card mode="ios" style="min-height: -webkit-fill-available;">
+  <ion-card-header style="text-align: center;">
+    <ion-icon name="chatbox-ellipses-outline" color="primary" style="font-size: xxx-large; margin-bottom: 10px;"></ion-icon>
+    <ion-card-subtitle>{{ 'COMMENT.TITLE' | translate }}</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content style="text-align: center;">
+    <p><small>{{ 'COMMENT.PARAG' | translate }}</small></p>
+    <p><small>{{ 'COMMENT.SUB_PARAG' | translate }}</small></p>
+  </ion-card-content>
+
+  <section *ngIf="!isCommentSended">
+    <ion-item mode="md">
+      <ion-label position="fixed">{{ 'COMMENT.NAME' | translate }}:</ion-label>
+      <ion-input placeholder="{{ 'COMMENT.NAME' | translate }}" name="name" [(ngModel)]="comment.name"></ion-input>
+    </ion-item>
+    <ion-item mode="md">
+      <ion-label position="fixed">{{ 'COMMENT.PHONE' | translate }}:</ion-label>
+      <ion-input inputmode="tel" type="tel" name="phone" placeholder="{{ 'COMMENT.PHONE_HOLDER' | translate }}" [(ngModel)]="comment.phone"></ion-input>
+    </ion-item>
+    <ion-item mode="md" style="margin-top: 10px;">
+      <ion-label position="fixed">{{ 'COMMENT.SUBJECT' | translate }}:</ion-label>
+      <ion-input placeholder="{{ 'COMMENT.SUBJECT_HOLDER' | translate }}" name="title" [(ngModel)]="comment.title"></ion-input>
+    </ion-item>
+    <ion-item mode="md">
+      <ion-textarea rows="4" placeholder="{{ 'COMMENT.BODY_HOLDER' | translate }}" name="description" [(ngModel)]="comment.description"></ion-textarea>
+    </ion-item>
+    <ion-card-content style="display: flex; align-items: center; justify-content: center; padding: 15px 0px;">
+      <re-captcha (resolved)="captchaResolved($event)" siteKey="6LeIMd0ZAAAAADzXzj6pHnYHf60Og07-7Xi_qAHP"></re-captcha>
+    </ion-card-content>
+    <form (ngSubmit)="sendForm()">
+      <ion-button [disabled]="!captchaPassed" expand="block" (click)="sendForm()" fill="outline" color="default" style="margin:20px;">{{ 'COMMENT.SEND' | translate }}</ion-button>
+    </form>
+  </section>
+
+  <section *ngIf="isCommentSended">
+    <ion-card-header style="text-align: center;">
+      <ion-icon name="checkmark-outline" color="success" style="font-size: xxx-large; margin-bottom: 10px;"></ion-icon>
+      <ion-card-subtitle>{{ 'GLOBAL.THANKS' | translate }}</ion-card-subtitle>
+    </ion-card-header>
+  </section>
+
+</ion-card>

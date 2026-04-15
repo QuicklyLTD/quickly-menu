@@ -1,0 +1,168 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+// @import url("https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&display=swap");
+
+// @font-face {
+//   font-family: 'JostRegular';
+//   src: url('../src/assets/fonts/JostRegular.eot');
+//   src: url('../src/assets/fonts/JostRegular.eot') format('embedded-opentype'),
+//        url('../src/assets/fonts/JostRegular.woff2') format('woff2'),
+//        url('../src/assets/fonts/JostRegular.woff') format('woff'),
+//        url('../src/assets/fonts/JostRegular.ttf') format('truetype'),
+//        url('../src/assets/fonts/JostRegular.svg#Quickly') format('svg');
+// }
+
+ion-menu-button {
+  color: white;
+}
+
+ion-toolbar {
+  background-color: var(--ion-color-dark);
+}
+
+.search-holder {
+  background-color: rgb(39, 39, 39);
+  width: 100%;
+}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-bottom: 20px;
+
+  .card {
+    padding: 0px 5px;
+    min-width: 140px;
+    display: inline-block;
+    text-align: center;
+    b {
+      position: relative;
+      top: -7.5px;
+    }
+    p {
+      margin: 0;
+      text-align: center;
+      font-size: small;
+      white-space: break-spaces;
+      height: 25px;
+      padding: 0px 5px;
+    }
+  }
+}
+
+:root,
+:root[mode="md"],
+:root[mode="ios"] {
+  --ion-font-family: "Jost", sans-serif;
+  font-family: var(--ion-font-family) !important;
+}
+
+.fade-in {
+  animation: fadeIn ease 500ms;
+  -webkit-animation: fadeIn ease 500ms;
+  -moz-animation: fadeIn ease 500ms;
+  -o-animation: fadeIn ease 500ms;
+  -ms-animation: fadeIn ease 500ms;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    .storeLogo {
+      filter: invert(1);
+    }
+  }
+}
+
+body.dark {
+  .storeLogo {
+    filter: invert(1);
+  }
+}
+
+body {
+  -webkit-animation-delay: 0.1s;
+  -webkit-animation-name: fontfix;
+  -webkit-animation-duration: 0.1s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes fontfix {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}

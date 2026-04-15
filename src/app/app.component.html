@@ -1,0 +1,9 @@
+<ion-app>
+  <ion-router-outlet [swipeGesture]="false" id="main-content"></ion-router-outlet>
+  <ion-fab mode="ios" *ngIf="(orderItemCount$ | async) > 0 && (orderType$ | async) == 0" horizontal="end" slot="fixed" vertical="bottom">
+    <ion-button class="success" (click)="openCart()" color="success">
+      <ion-icon style="margin-right: 5px;" name="receipt"></ion-icon>
+      {{ 'ORDER_LIST.ORDER_LIST' | translate }} ({{ orderItemCount$ | async }})
+    </ion-button>
+  </ion-fab>
+</ion-app>

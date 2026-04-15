@@ -1,0 +1,86 @@
+
+<!-- <div style="display: flex;">
+  <ion-segment color="dark" mode="md"  value="menu" (ionChange)="segmentChanged($event)" scrollable="false" style="width: 90%;" >
+    <ion-segment-button value="menu" layout="icon-start">
+      <ion-icon name="book-outline"></ion-icon>
+      <ion-label>{{ 'GLOBAL.MENU' | translate}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="info" layout="icon-start">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <ion-label>{{ 'GLOBAL.INFO' | translate}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="comments" layout="icon-start">
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <ion-label>{{ 'GLOBAL.COMMENT' | translate}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <div style="width: 10%;">
+    <img (click)="selectLanguage($event)"  style="height: 24px; width: 24px;" src="/assets/flags/{{selectedLang}}.png">
+  </div>
+</div> -->
+
+<!-- <ion-segment color="dark" mode="md"  value="menu" (ionChange)="segmentChanged($event)" scrollable="false" >
+  <ion-segment-button value="menu" layout="icon-start">
+    <ion-icon name="book-outline"></ion-icon>
+    <ion-label>{{ 'GLOBAL.MENU' | translate}}</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="info" layout="icon-start">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    <ion-label>{{ 'GLOBAL.INFO' | translate}}</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="comments" layout="icon-start">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <ion-label>{{ 'GLOBAL.COMMENT' | translate}}</ion-label>
+  </ion-segment-button>
+</ion-segment> -->
+
+
+<ion-content #content forceOverscroll="true" scrollEvents="true" (ionScroll)='onContentScroll($event)'>
+  <ion-header #header mode="ios">
+    <ion-item-divider [color]="theme.greetings" mode="md">
+      <ion-icon name="hand-left-outline" style="margin-right: 10px;"></ion-icon>
+      <ion-label>
+        {{ 'GLOBAL.HI' | translate }} <b>{{user.name}}</b>
+      </ion-label>
+      <ion-buttons mode="ios" slot="end" style="margin-right: 5px;">
+        <ion-button *ngIf="isOrderOpen" (click)="goCheck()" fill="solid" color="primary">
+          {{ 'BILL.CHECK' | translate }}
+          <ion-icon slot="end" name="reader"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="!isOrderOpen && isPreOrderOpen" (click)="goBasket()" fill="solid" color="warning">
+          {{ 'BASKET.BASKET'  | translate  }} ({{ orderItemCount$ | async }})
+          <ion-icon style="margin-left: 5px;" slot="end" name="basket"></ion-icon>
+        </ion-button>
+        <ion-button (click)="selectLanguage($event)" fill="outline" color="danger">
+          <img style="height: 24px; width: 24px;" src="/assets/flags/{{selectedLang}}.png">
+        </ion-button>
+      </ion-buttons>
+    </ion-item-divider>
+  </ion-header>
+    <!-- <div style="position: sticky; top:0; background: white; z-index: 90;"> -->
+    <ion-item-divider [color]="theme.greetings" sticky="true" mode="md" style="padding: 0;">
+      <ion-segment  color="dark" mode="md"  value="menu" (ionChange)="segmentChanged($event)" scrollable="false" >
+        <ion-segment-button value="menu" layout="icon-start">
+          <ion-icon name="book-outline"></ion-icon>
+          <ion-label>{{ 'GLOBAL.MENU' | translate}}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="info" layout="icon-start">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <ion-label>{{ 'GLOBAL.INFO' | translate}}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="comments" layout="icon-start">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <ion-label>{{ 'GLOBAL.COMMENT' | translate}}</ion-label>
+        </ion-segment-button>
+        <!-- <ion-segment-button value="reservation" layout="icon-start">
+          <ion-icon name="today-outline"></ion-icon>
+          <ion-label>Rezervasyon</ion-label>
+        </ion-segment-button> -->
+      </ion-segment>
+    </ion-item-divider>
+    <!-- </div> -->
+  <store-menu *ngIf="selectedSegment == 'menu'" [menu]="menu" [theme]="theme" [content]="content"></store-menu>
+  <store-info *ngIf="selectedSegment == 'info'" [menu]="menu" [store]="store"></store-info>
+  <store-comments *ngIf="selectedSegment == 'comments'"></store-comments>
+  <!-- <store-reservation *ngIf="selectedSegment == 'reservation'"></store-reservation> -->
+</ion-content>

@@ -1,0 +1,11 @@
+<ion-list>
+  <ion-list-header lines="full">
+    <ion-label>Dil Seçiniz</ion-label>
+  </ion-list-header>
+  <ion-item *ngFor="let lang of langs" button (click)="changeLang(lang.code)">
+    <ion-avatar slot="start" style="--border-radius:0px">
+      <img [src]="lang.icon">
+    </ion-avatar>
+    <ion-label>{{lang.name}}</ion-label>
+  </ion-item>
+</ion-list>

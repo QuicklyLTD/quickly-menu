@@ -1,0 +1,10 @@
+{
+  "name": "Quickly",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "proxies": [{
+    "proxyUrl": "http://31.210.89.218:8888"
+}]
+}

@@ -1,0 +1,178 @@
+<ion-header mode="ios">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button text="{{ 'GLOBAL.BACK' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'BASKET.BASKET' | translate }}</ion-title>
+    <ion-buttons mode="ios" style="padding-right: 15px;" slot="primary">
+      {{orderList.length}} {{ 'ORDER_LIST.ITEM' | translate }}
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar style="padding-bottom: 5px;">
+    <ion-segment (ionChange)="segmentChanged($event)" [value]="selectedSegment" style="width: -webkit-fill-available; margin: 0 12px;">
+      <ion-segment-button value="basket" layout="icon-start">
+        <ion-label> {{ 'BASKET.BASKET' | translate }}</ion-label>
+        <ion-icon style="margin-right: 2px;" name="basket"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="orders" layout="icon-start">
+        <ion-label>{{ 'BASKET.PAST_ORDERS' | translate }}</ion-label>
+        <ion-icon style="margin-right: 2px;" name="time"></ion-icon>
+      </ion-segment-button>
+      <!-- <ion-segment-button value="payments" layout="icon-start">
+        <ion-label> {{ 'PAYMENT.PAYMENTS' | translate }}</ion-label>
+        <ion-icon style="margin-right: 2px;" name="card"></ion-icon>
+      </ion-segment-button> -->
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="selectedSegment == 'basket' ">
+  <ion-card mode="ios" class="fade-in" style="min-height: -webkit-fill-available;">
+
+    <ion-item mode="md" color="white" lines="full">
+      <ion-icon name="person-circle-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label>{{user.name}} {{user.surname}}</ion-label>
+      <ion-note slot="end">0 {{user.phone_number |  mask: '(000) 000 00 00' }}</ion-note>
+    </ion-item>
+
+    <ion-item mode="md" color="white" lines="full">
+      <ion-icon name="location-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label>{{ 'BASKET.ADDRESS' | translate }}</ion-label>
+      <ion-button mode="ios" fill="outline" slot="end">{{ 'BASKET.CHANGE_ADDRESS' | translate }}</ion-button>
+    </ion-item>
+
+    <p style="text-align: center;">{{user.address}}</p>
+
+    <ion-item mode="md" color="white" lines="full">
+      <ion-icon color="dark" name="receipt-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label>{{ 'PAYMENT.ORDERS' | translate }}</ion-label>
+      <ion-note style="font-size: medium; font-weight: bold; padding-top: 12px;" slot="end">{{orderList.length}} {{ 'ORDER_LIST.ITEM' | translate }}</ion-note>
+    </ion-item>
+
+    <ion-card-header *ngIf="getTotal() == 0" style="text-align: center; padding-top: 100px;">
+      <ion-icon name="receipt-outline" color="primary" style="font-size: xxx-large; margin-bottom: 10px;"></ion-icon>
+      <ion-card-subtitle>{{'ORDER_LIST.NOT_ORDER_YET' | translate}}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ng-container *ngIf="getTotal() > 0">
+
+      <ion-list mode="ios">
+        <ion-item *ngFor="let item of orderList; let i = index;">
+          <ion-label>{{item.name}} {{item.type}}
+            <p><small>{{item.note}}</small></p>
+          </ion-label>
+          <ion-note slot="end" color="danger" size="small">{{ item.price | price }}</ion-note>
+          <ion-button (click)="removeOrderItem(i)" slot="end" color="danger">
+            <ion-icon name="close-circle"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-item mode="md" color="white" lines="full">
+        <ion-icon name="calculator-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.TOTAL' | translate }}:</ion-label>
+        <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{getTotal() | price}}</ion-note>
+      </ion-item>
+
+
+      <ion-item-divider *ngIf="menu.favorites.length > 0" mode="md">
+        <ion-label>
+          {{ 'BASKET.ALSO_LIKE' | translate }}
+        </ion-label>
+      </ion-item-divider>
+
+      <div class="scrolling-wrapper">
+        <div class="card" *ngFor="let item of menu.favorites let i = index;" style="max-width: 140px;">
+          <ion-card mode="ios" style="height: 100px; width: 100px;">
+            <img style="max-height: 140px;" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{item.image}}" />
+            <ion-card-content style="padding:0px;">
+            </ion-card-content>
+          </ion-card>
+          <b *ngIf="!item.options">{{ item.price | price }}</b>
+          <b *ngIf="item.options">{{ item.options[0].price | price }}</b>
+          <p>
+            {{item.name | titlecase }}
+          </p>
+          <ion-button (click)="addOrder(item)" size="small" style="margin-top:10px" fill="outline" color="success" slot="end">
+            <ion-icon style="margin-right:2px;" name="add"></ion-icon>
+            {{ 'BASKET.ADD' | translate }}
+          </ion-button>
+        </div>
+      </div>
+
+      <ion-item mode="md" color="white" lines="full">
+        <ion-icon name="chatbubble-ellipses-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.ORDER_NOTE' | translate }}:</ion-label>
+        <!-- <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{orderCount}} Adet</ion-note> -->
+      </ion-item>
+
+      <ion-item mode="md">
+        <ion-input placeholder="{{ 'PRODUCT.ORDER_NOTE_HOLDER' | translate }}" (change)="orderNote = $event.target.value"></ion-input>
+      </ion-item>
+
+
+      <ion-item mode="md" color="white" lines="full">
+        <ion-icon name="timer-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'BASKET.ESTIMATED_TIME' | translate }}:</ion-label>
+        <!-- <ion-note style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">45 {{ 'TIME.MIN' | translate }}</ion-note> display-timezone="utc" -->
+        <ion-datetime mode="md" displayFormat="HH:mm" [value]="currentTime"  doneText="{{'LOADING.OK' | translate}}" cancelText="{{'PRODUCT.CANCEL' | translate}}" [hourValues]="availableHours"  minuteValues="0,15,30,45"></ion-datetime>
+      </ion-item>
+
+
+    </ng-container>
+  </ion-card>
+</ion-content>
+
+<ion-content *ngIf="selectedSegment == 'orders'">
+  <ion-card mode="ios" *ngFor="let item of checkItems; let i = index;" class="fade-in">
+    <ion-item mode="md" color="white" lines="full">
+      <ion-icon name="person-circle-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label>{{item.user.name | titlecase}}</ion-label>
+      <ion-note slot="end">{{item.timestamp | date:'dd/M/y' }}</ion-note>
+    </ion-item>
+    <ion-list>
+      <ion-item-group>
+        <ion-item-divider color="{{ (item.status == 0 ? 'warning' : item.status == 1 ? 'secondary' : item.status == 2 ? 'primary' : item.status == 3 ? 'danger' : item.status == 4 ? 'success' : 'dark' ) }}">
+          <ion-label style="font-size: smaller;">{{ statusNote(item.status)}}</ion-label>
+          <ion-icon slot="end" style="padding-right: 5px;" name="time-outline"></ion-icon>
+          <ion-label slot="end" style="padding-right: 10px; font-size: smaller;"> {{item.timestamp | date: 'HH:mm'}}</ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let product of item.items; let i = index;" lines="full">
+          <ion-label style="font-size: small; font-weight: bold; white-space: pre-line; overflow: visible;">
+            {{product.name | titlecase }} {{product.type | titlecase}}
+            <p><small>{{product.note}}</small></p>
+          </ion-label>
+          <ion-note slot="end" style="font-weight: bold; font-size: smaller;" size="large">{{ product.price | price }}</ion-note>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+    <ion-item lines="none">
+      <ion-label style="font-weight: bold;">{{ orderTotal(item) | price }}</ion-label>
+      <ion-button (click)="removeOrder(item)" style="margin:0" fill="outline" color="danger" slot="end">
+        <ion-icon style="margin-right:2px;" name="trash-outline"></ion-icon>
+        {{ 'GLOBAL.DELETE' | translate }}
+      </ion-button>
+      <ion-button (click)="repeatOrder(item)" fill="outline" slot="end">
+        <ion-icon style="margin-right:2px;" name="refresh-outline"></ion-icon>
+        {{ 'BASKET.REPEAT_ORDER' | translate }}
+      </ion-button>
+    </ion-item>
+  </ion-card>
+
+  <ion-card mode="ios" *ngIf="checkItems.length == 0" class="fade-in" style="min-height: -webkit-fill-available;">
+    <ion-card-header style="text-align: center; padding-top: 100px;">
+      <ion-icon name="time-outline" color="primary" style="font-size: xxx-large; margin-bottom: 10px;"></ion-icon>
+      <ion-card-subtitle>{{'ORDER_LIST.NOT_ORDER_YET' | translate}}</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+</ion-content>
+
+<ion-footer *ngIf="selectedSegment == 'basket'">
+  <ion-toolbar mode="md">
+    <ion-button mode="ios" [disabled]="getTotal() == 0" style="margin:15px;" expand="block" (click)="checkOut()" fill="solid" color="primary">
+      <ion-icon name="card-outline" slot="start"></ion-icon>
+      {{ 'PAYMENT.PAYMENT' | translate }}
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

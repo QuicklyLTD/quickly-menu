@@ -1,0 +1,156 @@
+<ion-card mode="ios">
+
+  <!-- <ion-item lines="none" color="white">
+    <img slot="start" width="60" class="storeLogo" [src]="store.logo">
+    <ion-label>
+      <h2 style="font-weight: bold; font-size: 15px;">{{store.name}}</h2>
+      <p>{{store.motto}}</p>
+    </ion-label>
+  </ion-item> -->
+  <ion-item  lines="full">
+    <!-- <ion-icon name="beer-outline" slot="start"></ion-icon>
+    <ion-icon name="call-outline" slot="start"></ion-icon> -->
+    <ion-icon name="restaurant-outline" slot="start"></ion-icon>
+    <ion-label>{{store.name}}</ion-label>
+    <ion-button href="tel:0{{store.phone_number}}" fill="outline" slot="end">{{ 'INFO.CALL' | translate }}</ion-button>
+  </ion-item>
+
+  <ion-card-header style="text-align: center;">
+
+    <img width="75%" class="storeLogo" [src]="store.logo">
+    <ion-label>
+      <h2 style="font-weight: bold; font-size: 15px;">"{{store.motto}}"</h2>
+      <p><small>{{store.address.description}}</small></p>
+      <p><span>0 {{store.phone_number | mask: '(000) 000 00 00'}}</span></p>
+    </ion-label>
+  </ion-card-header>
+
+</ion-card>
+
+<ion-card mode="ios">
+  <ion-item button (click)="showWifi()">
+    <ion-icon name="wifi" slot="start"></ion-icon>
+    <ion-label>{{ 'INFO.WIFI' | translate }}</ion-label>
+  </ion-item>
+
+  <ion-item button *ngFor="let item of menu.socialLinks" [href]="item.href" target="_blank">
+    <ion-icon name="logo-{{item.type}}" slot="start"></ion-icon>
+    <ion-label>{{item.displayName}}</ion-label>
+  </ion-item>
+
+
+
+  <!-- <ion-item button>
+    <ion-icon name="wine" slot="start"></ion-icon>
+    <ion-label>Önceki Siparişlerim</ion-label>
+  </ion-item> -->
+
+  <!-- <ion-item button >
+    <ion-icon name="warning" slot="start"></ion-icon>
+    <ion-label>Uyarılar</ion-label>
+  </ion-item> -->
+
+  <!-- <ion-item button (click)="callWaiter()" >
+    <ion-icon name="walk" slot="start"></ion-icon>
+    <ion-label>Garson Çağır</ion-label>
+  </ion-item> -->
+</ion-card>
+
+<ion-card mode="ios">
+  <ion-card-content style="padding:0px;">
+    <ion-skeleton-text animated style="position: relative; width: 100%; height: 150px; margin: 0;"></ion-skeleton-text>
+    <img style="position: absolute; top:0px;" src="https://maps.zomato.com/php/staticmap?center={{store.address.cordinates.latitude}},{{store.address.cordinates.longitude}}&maptype=zomato&markers={{store.address.cordinates.latitude}},{{store.address.cordinates.longitude}},pin_res32&sensor=false&scale=2&zoom=16&language=tr&size=240x150&size=400x240&size=600x300" />
+    <!-- <ion-note>{{store.address.description}}</ion-note> -->
+  </ion-card-content>
+  <ion-item>
+    <ion-icon name="pin" slot="start"></ion-icon>
+    <ion-label>{{ 'INFO.ROAD_INFO' | translate }}</ion-label>
+    <ion-button (click)="openInMaps()" fill="outline" slot="end">{{ 'INFO.SEE_MAP' | translate }}</ion-button>
+  </ion-item>
+</ion-card>
+
+<ion-card mode="ios">
+  <ion-item>
+    <ion-icon name="time" slot="start"></ion-icon>
+    <ion-label>{{ 'INFO.WORK_HOUR' | translate }}</ion-label>
+    <!-- <ion-button href="tel:0{{store.phone_number}}" fill="outline" slot="end">{{ 'INFO.CALL' | translate }}</ion-button> -->
+  </ion-item>
+
+  <ion-card-content>
+    <ion-item [disabled]="!days[0].is_open" lines="full">
+      <ion-label>{{ 'INFO.MON' | translate }}</ion-label>
+      <ion-note *ngIf="days[0].is_open">{{days[0].opening}} - {{days[0].closing}}</ion-note>
+      <ion-note *ngIf="!days[0].is_open">Kapalı</ion-note>
+    </ion-item>
+    <ion-item [disabled]="!days[1].is_open" lines="full">
+      <ion-label>{{ 'INFO.TUE' | translate }}</ion-label>
+      <ion-note *ngIf="days[1].is_open">{{days[1].opening}} - {{days[1].closing}}</ion-note>
+      <ion-note *ngIf="!days[1].is_open">Kapalı</ion-note>
+    </ion-item>
+    <ion-item [disabled]="!days[2].is_open" lines="full">
+      <ion-label>{{ 'INFO.WED' | translate }}</ion-label>
+      <ion-note *ngIf="days[2].is_open">{{days[2].opening}} - {{days[2].closing}}</ion-note>
+      <ion-note *ngIf="!days[2].is_open">Kapalı</ion-note>
+    </ion-item>
+    <ion-item [disabled]="!days[3].is_open" lines="full">
+      <ion-label>{{ 'INFO.THU' | translate }}</ion-label>
+      <ion-note *ngIf="days[3].is_open">{{days[3].opening}} - {{days[3].closing}}</ion-note>
+      <ion-note *ngIf="!days[3].is_open">Kapalı</ion-note>
+    </ion-item>
+    <ion-item [disabled]="!days[4].is_open" lines="full">
+      <ion-label>{{ 'INFO.FRI' | translate }}</ion-label>
+      <ion-note *ngIf="days[4].is_open">{{days[4].opening}} - {{days[4].closing}}</ion-note>
+      <ion-note *ngIf="!days[4].is_open">Kapalı</ion-note>
+    </ion-item>
+    <ion-item [disabled]="!days[5].is_open" lines="full">
+      <ion-label>{{ 'INFO.SAT' | translate }}</ion-label>
+      <ion-note *ngIf="days[5].is_open">{{days[5].opening}} - {{days[5].closing}}</ion-note>
+      <ion-note *ngIf="!days[5].is_open">Kapalı</ion-note>
+    </ion-item>
+    <ion-item [disabled]="!days[6].is_open" lines="full">
+      <ion-label>{{ 'INFO.SUN' | translate }}</ion-label>
+      <ion-note *ngIf="days[6].is_open">{{days[6].opening}} - {{days[6].closing}}</ion-note>
+      <ion-note *ngIf="!days[6].is_open">Kapalı</ion-note>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+
+<ion-card mode="ios">
+  <ion-item>
+    <ion-icon name="wallet-outline" slot="start"></ion-icon>
+    <ion-label>{{ 'INFO.PAYMENT' | translate }}</ion-label>
+    <!-- <ion-button href="tel:0{{store.phone_number}}" fill="outline" slot="end">Ara</ion-button> -->
+  </ion-item>
+
+  <ion-card-content>
+    <ion-item *ngIf="store.settings.allowed_payments.includes('Nakit')" lines="full">
+      <ion-label>{{ 'INFO.CASH' | translate }}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="store.settings.allowed_payments.includes('Kredi Kartı')" lines="full">
+      <ion-label>{{ 'INFO.CREDIT' | translate }}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="store.settings.allowed_payments.includes('Yemek Kartı')" lines="full">
+      <ion-label>{{ 'INFO.MEAL_CARD' | translate }}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="store.settings.allowed_payments.includes('Mobil Ödeme')" lines="full">
+      <ion-label>{{ 'INFO.MOBILE' | translate }}</ion-label>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+
+<!-- <ion-card mode="ios">
+  <ion-item button>
+    <ion-icon name="wine" slot="start"></ion-icon>
+    <ion-label>Önceki Siparişlerim</ion-label>
+  </ion-item>
+
+  <ion-item button>
+    <ion-icon name="warning" slot="start"></ion-icon>
+    <ion-label>Uyarılar</ion-label>
+  </ion-item>
+
+  <ion-item button (click)="callWaiter()">
+    <ion-icon name="walk" slot="start"></ion-icon>
+    <ion-label>Garson Çağır</ion-label>
+  </ion-item>
+</ion-card> -->

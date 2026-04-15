@@ -1,0 +1,38 @@
+ion-col {
+  padding: 0;
+  max-width: 33.3%;
+  min-width: 33.3%;
+}
+
+.catNameHolder {
+  text-align: center;
+  height: 37px;
+  padding: 5px;
+}
+
+.catName {
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin: auto;
+  white-space: pre;
+  line-height: 27px;
+}
+
+.longName {
+  white-space: pre-wrap;
+  // font-size: 3.6vw !important;
+  margin: 2px 0 3px 0 !important;
+  line-height: 12px;
+}
+
+.catImgHolder {
+  padding: 0px;
+  height: 30vw;
+}
+
+.catImg {
+  position: absolute;
+  top: 0px;
+  height: 30vw;
+  width: 100%;
+}

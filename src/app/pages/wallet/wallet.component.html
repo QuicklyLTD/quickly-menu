@@ -1,0 +1,207 @@
+<ion-header [translucent]="false" mode="ios">
+  <ion-toolbar color="light">
+    <ion-buttons *ngIf="receipt?.status == 4 || receipt?.status == 3 || receipt?.status == 0" slot="start">
+      <ion-back-button text="{{ 'GLOBAL.BACK' | translate }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'PAYMENT.PAYMENT' | translate }}</ion-title>
+    <ion-label slot="end" style="padding-right: 15px;">
+      {{ countDown }}
+    </ion-label>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-progress-bar style="height:100vh; position: fixed;" color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" type="indeterminate"></ion-progress-bar>
+
+  <ion-card *ngIf="!isLoading" mode="ios" class="fade-in" style="min-height: -webkit-fill-available;">
+    <section *ngIf="receipt?.status == 0">
+      <!-- <ion-item-divider color="dark" style="height: 35px;">
+        <ion-label style="font-size: smaller; font-weight: bold;">
+          Siparişler
+        </ion-label>
+      </ion-item-divider> -->
+
+      <!-- <ion-item mode="md" lines="full">
+        <ion-icon color="warning" name="receipt-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PAYMENT.ORDERS' | translate }}:</ion-label>
+        <ion-note style="font-size: smaller; font-weight: bold; padding-top: 10px;" slot="end"> {{ 'PRODUCT.QUANTITY' | translate }}</ion-note>
+      </ion-item> -->
+
+      <ion-item mode="md" color="light" lines="full">
+        <ion-icon color="warning" name="duplicate-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'PRODUCT.ITEM_COUNT' | translate }}:</ion-label>
+        <ion-note color="warning" style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{receipt.orders.length}} {{ 'PRODUCT.QUANTITY' | translate }}</ion-note>
+      </ion-item>
+
+
+      <ion-card-header *ngIf="receipt?.status == 0" style="text-align: center;">
+        <ion-icon name="receipt-outline" style="width: 100%; font-size: xxx-large;" color="warning"></ion-icon>
+        <ion-card-subtitle color="warning">{{ 'PAYMENT.ORDERS' | translate }}</ion-card-subtitle>
+        <!-- <ion-note style="width: 100%; font-size: smaller;">{{receipt.orders.length}} Adet Sipariş</ion-note> -->
+      </ion-card-header>
+
+      <ion-list mode="ios">
+        <ion-item-group *ngFor="let item of receipt?.orders; let i = index;">
+          <ion-item-divider>
+            <ion-label style="font-size: smaller;">
+              {{item.user.name | titlecase}}
+            </ion-label>
+            <ion-icon slot="end" style="padding-right: 5px;" name="time-outline"></ion-icon>
+            <ion-label slot="end" style="padding-right: 10px; font-size: smaller;"> {{item.timestamp | date: 'HH:mm'}}</ion-label>
+          </ion-item-divider>
+          <ion-item *ngFor="let product of item.items; let i = index;">
+            <ion-label style="font-size: small; font-weight: bold; white-space: pre-line; overflow: visible;">
+              {{product.name | titlecase }} {{product.type | titlecase}}
+              <p><small>{{product.note}}</small></p>
+            </ion-label>
+            <ion-note slot="end" style="font-weight: bold; font-size: smaller;" size="large">{{ product.price | price }}</ion-note>
+          </ion-item>
+        </ion-item-group>
+      </ion-list>
+    </section>
+
+    <section *ngIf="receipt?.status !== 0">
+
+      <ion-item mode="md" color="dark" lines="full">
+        <ion-icon color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" name="reader-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+        <ion-label>{{ 'BILL.BILL' | translate }}</ion-label>
+        <ion-note color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" style="font-size: medium; font-weight: bold; padding-top: 12px;" slot="end">{{receipt?.timestamp | date: 'HH:mm'}}</ion-note>
+      </ion-item>
+
+      <!-- <ion-item-divider style="height: 35px;" color="dark">
+        <ion-label>{{ 'PRODUCT.TOTAL' | translate }}:</ion-label>
+        <ion-icon slot="end" color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" style="padding-right: 5px; font-size: large; font-weight: bold; " name="time-outline"></ion-icon>
+        <ion-note color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" style="font-size: large; font-weight: bold;" slot="end">{{receipt?.timestamp | date: 'HH:mm'}}</ion-note>
+      </ion-item-divider> -->
+
+      <ion-card-header style="text-align: center;">
+        <ion-icon color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" style="font-size: xxx-large;"
+          name="{{ ( receipt?.method == 1 ? 'cash-outline' : receipt?.method == 2 ? 'card-outline' : receipt?.method == 3 ? 'bookmark-outline' : receipt?.method == 4 ? 'wallet-outline' : receipt?.method == 5 ? 'logo-bitcoin' : 'calucator-outline') }}"></ion-icon>
+        <ion-card-subtitle color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}">{{ 'PAYMENT.METHOD' | translate }}:</ion-card-subtitle>
+        <!-- <ion-note style="width: 100%; font-size: smaller;">{{ 'PAYMENT.METHOD' | translate }}:</ion-note> -->
+        <ion-card-subtitle style="margin-top: 5px;">{{ paymentNote(receipt.method) | translate }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-list mode="ios" *ngIf="receipt?.status !== 0" class="fade-in">
+        <ion-item-group *ngFor="let item of ordersWillPay; let i = index;">
+          <ion-item lines="full">
+            <ion-note slot="start" style="margin-right: 5px; font-weight: bold; font-size: smaller;">{{item.count}} x</ion-note>
+            <ion-label style="font-size: 12px; font-weight: bold; white-space: pre-line; overflow: visible;">
+              {{item.name | titlecase}} {{item.type | titlecase}}
+            </ion-label>
+            <ion-note slot="end" style="font-weight: bold; font-size: smaller;">{{ (item.price*item.count) | price }}</ion-note>
+          </ion-item>
+        </ion-item-group>
+      </ion-list>
+    </section>
+
+    <!-- <ion-card-header style="text-align: center;">
+      <ion-card-subtitle>{{ receipt?.status == 3 ? 'Ödenen Toplam': 'Ödenecek Ürünler Toplamı' }}</ion-card-subtitle>
+      <ion-card-title color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}">
+        {{ receipt?.total| price }}
+      </ion-card-title>
+    </ion-card-header> -->
+
+    <!-- <ion-item mode="md" lines="full">
+      <ion-icon color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" name="pricetag-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label style="font-weight: bold;">Kdv:</ion-label>
+      <ion-note color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{ 27 | price }}</ion-note>
+    </ion-item> -->
+
+    <ion-item mode="md" lines="full">
+      <ion-icon color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" name="calculator-outline" style="margin-inline-end: 10px;" slot="start"></ion-icon>
+      <ion-label style="font-weight: bold;">{{ 'PRODUCT.TOTAL' | translate }}:</ion-label>
+      <ion-note color="{{ ( receipt?.status < 2 ? 'warning' : receipt?.status == 3 ? 'success' : receipt?.status == 4 ? 'danger' : 'primary' ) }} }}" style="font-size: large; font-weight: bold; padding-top: 10px;" slot="end">{{ receipt?.total| price }}</ion-note>
+    </ion-item>
+
+
+    <section *ngIf="receipt?.status == 2 && receipt?.method == 4" class="fade-in">
+      <!-- <ion-item-divider color="dark" style="height: 35px;">
+        <ion-label style="font-size: smaller; font-weight: bold;">
+          Kart Bilgileri
+        </ion-label>
+        <ion-icon slot="end" style="padding-right: 5px;" name="card-outline"></ion-icon>
+      </ion-item-divider> -->
+
+      <ion-card-header style="text-align: center;">
+        <ion-icon name="shield-checkmark-outline" style="width: 100%; font-size: xxx-large;" color="primary"></ion-icon>
+        <ion-card-subtitle color="primary">{{ 'PAYMENT.SECURE_PAYMENT' | translate }}</ion-card-subtitle>
+        <ion-note style="width: 100%; font-size: smaller;">{{ 'PAYMENT.SECURE_NOTE' | translate }}</ion-note>
+      </ion-card-header>
+
+      <div class="card-container" style="margin-bottom: 10px; margin-top: 10px; padding-left: 10px; padding-right: 10px;"></div>
+      <form #cardForm="ngForm" (ngSubmit)="sendForm(cardForm)" card container=".card-container" card-width="340" [messages]="messages" [placeholders]="placeholders" formatting="false" debug="true">
+        <ion-item mode="md" lines="full">
+          <ion-label position="fixed">{{'PAYMENT.CARD_NO' | translate}}:</ion-label>
+          <input type="text" required="true" name="number" card-number class="native-input sc-ion-input-md" inputmode="tel" autocomplete="cc-number" [placeholder]="placeholders.number" mask="0000 0000 0000 0000" ngModel />
+        </ion-item>
+        <ion-item mode="md" lines="full">
+          <ion-label position="fixed">{{'PAYMENT.CARD_NAME' | translate}}:</ion-label>
+          <input type="text" required="true" name="name" card-name autocapitalize="true" autocomplete="cc-name" placeholder="{{'PAYMENT.CARD_NAME_PLACEHOLDER' | translate}}" class="native-input sc-ion-input-md" ngModel />
+        </ion-item>
+        <ion-item mode="md" lines="full" style="margin-top: 10px;">
+          <ion-label position="fixed">{{'PAYMENT.MH_YR' | translate}}:</ion-label>
+          <input type="text" required="true" name="expiry" card-expiry class="native-input sc-ion-input-md" inputmode="tel" autocomplete="cc-exp" [placeholder]="placeholders.expiry" mask="00/00" ngModel />
+        </ion-item>
+        <ion-item mode="md" lines="full" style="margin-top: 10px;">
+          <ion-label position="fixed">{{'PAYMENT.CVV' | translate}}:</ion-label>
+          <input type="text" required="true" name="cvc" card-cvc class="native-input sc-ion-input-md" inputmode="tel" autocomplete="cc-csc" [placeholder]="placeholders.cvc" mask="000" ngModel />
+        </ion-item>
+
+        <ion-item style="display:none" mode="md">
+          <ion-input inputmode="tel" disabled autocomplete="cc-number" [placeholder]="placeholders.number" mask="0000 0000 0000 0000" name="number"></ion-input>
+        </ion-item>
+
+        <ion-card-header style="display: flex; align-items: center; justify-content: center; text-align: center; flex-direction: column;">
+          <ion-icon name="reader-outline" style="width: 100%; font-size: xxx-large;" color="primary"></ion-icon>
+          <ion-card-subtitle color="primary">{{'PAYMENT.SALES_AGREEMENT' | translate}}</ion-card-subtitle>
+          <ion-note style="font-size: smaller;"><a style="text-decoration: underline;">{{ 'PAYMENT.ONLINE_SALES_AGREEMENT' | translate }}</a> {{ 'PAYMENT.IVE_READ' | translate }}</ion-note>
+          <ion-toggle color="primary" [(ngModel)]="isContractReaded" [ngModelOptions]="{standalone: true}" style="margin-top: 10px; margin-bottom: 5px;"></ion-toggle>
+          <ion-note style="font-size: smaller;"> {{ 'PAYMENT.ACCEPTED' | translate }}</ion-note>
+        </ion-card-header>
+
+        <section>
+          <ion-button *ngIf="receipt?.status == 2 && receipt?.method == 4" class="absBtn" [disabled]="!isContractReaded" expand="block" type="submit" fill="solid" color="primary" style="margin: 10px 13px;">{{ 'PAYMENT.PROCEED' | translate }}</ion-button>
+        </section>
+      </form>
+    </section>
+
+    <section *ngIf="receipt?.status == 1" style="min-height: 110px;">
+      <ion-card-header class="absBtn" style="text-align: center;">
+        <ion-card-subtitle color="warning">{{ 'PAYMENT.WAIT' | translate }}</ion-card-subtitle>
+        <ion-spinner name="dots" color="warning" style="width: 100%;"></ion-spinner>
+        <ion-note style="font-size: smaller;">{{ 'PAYMENT.WAIT_MESSAGE' | translate }}</ion-note>
+      </ion-card-header>
+    </section>
+
+    <section *ngIf="receipt?.status == 2 && receipt?.method !== 4" style="min-height: 110px;">
+      <ion-card-header class="absBtn" style="text-align: center;">
+        <ion-card-subtitle color="primary">{{ 'PAYMENT.PROCESSING' | translate }}</ion-card-subtitle>
+        <ion-spinner name="dots" color="primary" style="width: 100%;"></ion-spinner>
+        <ion-note style="font-size: smaller;">{{ 'PAYMENT.PROCESSING_WAIT' | translate }}</ion-note>
+      </ion-card-header>
+    </section>
+
+    <section *ngIf="receipt?.status == 3" style="min-height: 110px;">
+      <ion-card-header class="absBtn" style="text-align: center; padding: 20px 0px 0px;">
+        <ion-card-subtitle color="success">{{ 'PAYMENT.SUCCESS' | translate }}</ion-card-subtitle>
+        <ion-icon name="shield-checkmark-outline" style="width: 100%; font-size: xxx-large;" color="success"></ion-icon>
+        <ion-note style="font-size: smaller;">{{ 'PAYMENT.SUCCESS_MESSAGE' | translate }}</ion-note>
+        <ion-button expand="block" (click)="endPayment()" fill="solid" color="success" style="margin: 10px 13px; margin-top: 30px;">{{ 'LOADING.OK' | translate }}</ion-button>
+      </ion-card-header>
+    </section>
+
+    <section *ngIf="receipt?.status == 4" style="min-height: 110px;">
+      <ion-card-header class="absBtn" style="text-align: center;">
+        <ion-card-subtitle color="danger">{{ 'PAYMENT.ERROR' | translate }}</ion-card-subtitle>
+        <ion-icon name="skull-outline" style="width: 100%; font-size: xxx-large;" color="danger"></ion-icon>
+        <ion-note style="font-size: smaller;">{{ errorReason }}</ion-note>
+      </ion-card-header>
+    </section>
+
+    <section *ngIf="receipt?.status == 0" style="min-height: 70px;">
+      <ion-button class="absBtn" expand="block" (click)="callForCheck()" fill="solid" color="warning" style="margin: 10px 13px;">{{ 'PAYMENT.SUBMIT' | translate }}</ion-button>
+    </section>
+
+  </ion-card>
+</ion-content>

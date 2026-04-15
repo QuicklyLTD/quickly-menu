@@ -1,0 +1,39 @@
+<ion-header [translucent]="true" mode="ios">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'ORDER_LIST.ORDER_LIST' | translate }}</ion-title>
+    <ion-label slot="end" style="padding-right: 15px;">
+      {{orderList.length}} {{ 'ORDER_LIST.ITEM' | translate }}
+    </ion-label>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list mode="ios">
+    <ion-item *ngFor="let item of orderList; let i = index;">
+      <ion-label>{{item.name}} {{item.type}}
+        <p><small>{{item.note}}</small></p>
+      </ion-label>
+      <ion-note slot="end" color="danger" size="large">{{ item.price | price }}</ion-note>
+      <ion-button (click)="removeOrderItem(i)" slot="end" color="danger">
+        <ion-icon name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar mode="md">
+    <ion-title>{{ 'PRODUCT.TOTAL' | translate }}: {{ getTotal() | price }}</ion-title>
+    <ion-buttons slot="primary" style="padding-right: 10px;">
+      <ion-button size="large" (click)="checkOut()" fill="solid" color="success">
+        {{ 'ORDER_LIST.SEND' | translate }}
+        <ion-icon slot="end" name="send"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
