@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -9,8 +10,7 @@ export class HttpService {
     hostname: string;
 
     constructor(private http: HttpClient) {
-        this.hostname = "https://hq.quickly.host";
-        // this.hostname = "http://localhost:3000"
+        this.hostname = environment.apiBaseUrl;
     }
 
     get(url: string) {
