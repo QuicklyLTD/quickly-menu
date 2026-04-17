@@ -5,6 +5,6 @@
   },
   "type": "angular",
   "proxies": [{
-    "proxyUrl": "http://31.210.89.218:8888"
+    "proxyUrl": "http://95.111.230.121:8888"
 }]
 }

@@ -9,9 +9,8 @@ export class HttpService {
     hostname: string;
 
     constructor(private http: HttpClient) {
-        this.hostname = "https://hq.quickly.com.tr";
+        this.hostname = "https://hq.quickly.host";
         // this.hostname = "http://localhost:3000"
-        // this.hostname = "https://quickly.com.tr";
     }
 
     get(url: string) {

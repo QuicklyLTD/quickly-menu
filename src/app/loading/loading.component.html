@@ -6,7 +6,7 @@
   <ion-img src="/assets/logos/logo-white.svg" style="height: 75px; margin-top:50px; z-index: 999; position: relative;"></ion-img>
   <div style="position: absolute; top:30%; width: 100%">
     <ion-img *ngIf="slug == ('error' || 'check' || 'wallet' || 'store' || 'basket' ) || slug == undefined || token == 'category' " src="/assets/images/qavatar{{logo}}.png"></ion-img>
-    <ion-img *ngIf="slug !== ('error' || 'check' || 'wallet' || 'store' || 'basket') && slug !== undefined && token !== 'category'" style="height: 250px;" src="https://cdn.quickly.com.tr/slug/{{slug}}.png"></ion-img>
+    <ion-img *ngIf="slug !== ('error' || 'check' || 'wallet' || 'store' || 'basket') && slug !== undefined && token !== 'category'" style="height: 250px;" src="https://cdn.quickly.host/slug/{{slug}}.png"></ion-img>
     <h2 style="text-align: center; margin-top: 75px;">{{message}}</h2>
   </div>
 </ion-content>

@@ -2,7 +2,7 @@
   "name": "quickly-menu",
   "version": "0.9.6",
   "author": "Quickly Yazılım Kurumsal Hizmetler Sanayii Ve Dış Tiç. Ltd. Şti",
-  "homepage": "https://qr.quickly.com.tr/",
+  "homepage": "https://qr.quickly.host/",
   "scripts": {
     "ng": "ng",
     "start": "ionic serve --external",
@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "upload": "rsync -avz --ignore-existing -r /Users/ozgur/Desktop/quickly-menu/www/* root@quickly.com.tr:/var/www/qr.quickly.com.tr/"
+    "upload": "rsync -avz --ignore-existing -r ./www/* root@95.111.230.121:/var/www/qr.quickly.host/releases/"
   },
   "private": true,
   "dependencies": {
@@ -38,7 +38,7 @@
     "ionic5-star-rating": "https://github.com/JeongJun-Lee/ionic5-star-rating/tarball/master",
     "moment": "^2.29.1",
     "ng-recaptcha": "^6.0.2",
-    "ngx-card": "https://github.com/QuicklyPOS/ngx-card/master",
+    "ngx-card": "git+https://github.com/QuicklyPOS/ngx-card.git#master",
     "ngx-mask": "^9.0.2",
     "pouchdb": "^7.2.1",
     "pouchdb-find": "^7.2.1",

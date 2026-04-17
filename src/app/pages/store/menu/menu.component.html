@@ -11,7 +11,7 @@
 
     <ion-slides [options]="slideOpts" pager="true" style="--bullet-background-active:black; max-height:295px;">
       <ion-slide color="dark" *ngFor="let item of menu.promotions">
-        <img src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{item.image}}" alt="{{item?.description}}">
+        <img src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/{{item.image}}" alt="{{item?.description}}">
       </ion-slide>
     </ion-slides>
   </div>
@@ -19,7 +19,7 @@
   <!-- <div class="scrolling-wrapper">
     <div class="card" *ngFor="let item of menu.categories let i = index;" (click)="scrollTo('cat'+i)">
       <ion-card mode="ios" style="height: 100px; width: 100px;">
-        <img style="max-height: 140px;" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{item.image}}" />
+        <img style="max-height: 140px;" src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/{{item.image}}" />
         <ion-card-content style="padding:0px;">
         </ion-card-content>
       </ion-card>
@@ -37,7 +37,7 @@
       <ion-col *ngFor="let item of menu.categories let i = index;">
         <ion-card mode="ios" button="true" style="margin: 6px;" (click)="selectCategory(item)">
           <ion-card-content class="catImgHolder">
-            <img class="catImg" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{item.image}}" />
+            <img class="catImg" src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/{{item.image}}" />
           </ion-card-content>
           <div class="catNameHolder">
             <p class="catName" [ngClass]="{'longName': item.name.length > 15}">{{item.name | titlecase }}</p>
@@ -72,7 +72,7 @@
     <ion-item-group>
 
       <ion-list-header style="padding:0; max-height: 200px;">
-        <img style="width: 100%; position: relative; top: 80px;" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{selectedCategory?.image}}">
+        <img style="width: 100%; position: relative; top: 80px;" src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/{{selectedCategory?.image}}">
       </ion-list-header>
 
 
@@ -82,7 +82,7 @@
         <!-- <p *ngIf="selectedCategory?.description">{{selectedCategory?.description}}</p> -->
         <!-- <ion-item lines="none">
           <ion-avatar slot="start">
-            <img src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{selectedCategory?.image}}">
+            <img src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/{{selectedCategory?.image}}">
           </ion-avatar>
           <ion-label>
             <h1 style="font-weight: bold;">{{selectedCategory?.name | titlecase}} </h1>
@@ -94,8 +94,8 @@
       <ng-container *ngFor="let product of selectedCategory?.items">
         <ion-item *ngIf="!product.is_hidden" [disabled]="!product.is_available" (click)="productDetail(product)" button>
           <ion-avatar slot="start">
-            <img *ngIf="product?.image" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{product?.image}}">
-            <img *ngIf="!product?.image" class="storeLogo" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/kategori/default.png">
+            <img *ngIf="product?.image" src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/{{product?.image}}">
+            <img *ngIf="!product?.image" class="storeLogo" src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/kategori/default.png">
           </ion-avatar>
           <ion-label>{{product.name | titlecase }}
             <p style="white-space: pre-wrap;">{{ product.description }}</p>
@@ -118,8 +118,8 @@
         <ng-container *ngFor="let product of group.items">
           <ion-item *ngIf="!product.is_hidden" [disabled]="!product.is_available" (click)="productDetail(product)" button>
             <ion-avatar slot="start">
-              <img *ngIf="product?.image" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/{{product?.image}}">
-              <img *ngIf="!product?.image" src="https://cdn.quickly.com.tr/quickly-menu/{{menu.slug}}/kategori/default.png">
+              <img *ngIf="product?.image" src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/{{product?.image}}">
+              <img *ngIf="!product?.image" src="https://cdn.quickly.host/quickly-menu/{{menu.slug}}/kategori/default.png">
             </ion-avatar>
             <ion-label>{{product.name | titlecase }}
               <p>{{ product.description }}</p>
