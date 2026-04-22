@@ -129,11 +129,22 @@
         <ion-note style="width: 100%; font-size: smaller;">{{ 'PAYMENT.SECURE_NOTE' | translate }}</ion-note>
       </ion-card-header>
 
-      <div class="card-container" style="margin-bottom: 10px; margin-top: 10px; padding-left: 10px; padding-right: 10px;"></div>
-      <form #cardForm="ngForm" (ngSubmit)="sendForm(cardForm)" card container=".card-container" card-width="340" [messages]="messages" [placeholders]="placeholders" formatting="false" debug="true">
+      <div class="credit-card-preview" style="margin-bottom: 10px; margin-top: 10px; padding-left: 10px; padding-right: 10px;">
+        <div class="card-visual">
+          <div class="card-visual__front">
+            <div class="card-visual__logo">CREDIT CARD</div>
+            <div class="card-visual__number">{{ cardPreviewNumber }}</div>
+            <div class="card-visual__bottom">
+              <div class="card-visual__name">{{ cardPreviewName }}</div>
+              <div class="card-visual__expiry">{{ cardPreviewExpiry }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form #cardForm="ngForm" (ngSubmit)="sendForm(cardForm)">
         <ion-item mode="md" lines="full">
           <ion-label position="fixed">{{'PAYMENT.CARD_NO' | translate}}:</ion-label>
-          <input type="text" required="true" name="number" card-number class="native-input sc-ion-input-md" inputmode="tel" autocomplete="cc-number" [placeholder]="placeholders.number" mask="0000 0000 0000 0000" ngModel />
+          <input type="text" required="true" name="number" class="native-input sc-ion-input-md" inputmode="tel" autocomplete="cc-number" placeholder="•••• •••• •••• ••••" mask="0000 0000 0000 0000" ngModel (ngModelChange)="onCardNumberChange($event)" />
         </ion-item>
         <ion-item mode="md" lines="full">
           <ion-label position="fixed">{{'PAYMENT.CARD_NAME' | translate}}:</ion-label>

@@ -31,7 +31,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { StarRatingModule } from 'ionic5-star-rating';
 import { NgxMaskModule } from 'ngx-mask';
-import { CardModule } from 'ngx-card/ngx-card';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // import { WebBluetoothModule } from '@manekinekko/angular-web-bluetooth';
@@ -83,7 +82,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     FormsModule,
     AppRoutingModule,
     StarRatingModule,
-    CardModule,
     // CalendarModule,
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyC179lrS0-Evp3HKuAUUppBRn0B2qJsrK4'

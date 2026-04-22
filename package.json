@@ -32,13 +32,13 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "@types/web-bluetooth": "0.0.6",
-    "card": "^2.5.0",
+    "card": "^2.5.4",
     "core-js": "^2.5.4",
     "ion2-calendar": "^3.5.0",
-    "ionic5-star-rating": "https://github.com/JeongJun-Lee/ionic5-star-rating/tarball/master",
+    "ionic5-star-rating": "git+https://github.com/JeongJun-Lee/ionic5-star-rating.git#master",
     "moment": "^2.29.1",
     "ng-recaptcha": "^6.0.2",
-    "ngx-card": "git+https://github.com/QuicklyPOS/ngx-card.git#master",
+    "ngx-card": "git+https://github.com/QuicklyPOS/ngx-card.git#v0.2.2",
     "ngx-mask": "^9.0.2",
     "pouchdb": "^7.2.1",
     "pouchdb-find": "^7.2.1",
@@ -56,6 +56,7 @@
     "@ionic/angular-toolkit": "^2.1.1",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/ms": "^0.7.31",
     "@types/node": "~8.9.4",
     "@types/pouchdb": "^6.4.0",
     "codelyzer": "^5.0.0",
@@ -69,7 +70,8 @@
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.4.3"
+    "typescript": "~3.4.3",
+    "webpack": "^4.47.0"
   },
   "description": "Quickly QR Menu and Ordering App"
 }

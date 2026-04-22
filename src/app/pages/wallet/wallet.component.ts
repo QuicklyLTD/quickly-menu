@@ -22,12 +22,16 @@ export class WalletComponent implements OnInit {
 
   cardNumber: string;
 
+  cardPreviewNumber: string = '•••• •••• •••• ••••';
+  cardPreviewName: string = 'KART SAHİBİ';
+  cardPreviewExpiry: string = '••/••';
+
   messages = { validDate: 'SK\nTA', monthYear: 'AY/YIL' };
   placeholders = { number: '•••• •••• •••• ••••', expiry: '••/••', cvc: '•••' };
   timeout: number = 120000;
 
   private changeListener: any;
-  timeoutInterval: NodeJS.Timer;
+  timeoutInterval: any;
   countDown: string;
 
   constructor(
@@ -231,6 +235,18 @@ export class WalletComponent implements OnInit {
         console.log(err)
       })
     })
+  }
+
+  onCardNumberChange(val: string) {
+    this.cardPreviewNumber = val || '•••• •••• •••• ••••';
+  }
+
+  onCardNameChange(val: string) {
+    this.cardPreviewName = val || 'KART SAHİBİ';
+  }
+
+  onCardExpiryChange(val: string) {
+    this.cardPreviewExpiry = val || '••/••';
   }
 
   sendForm(form: NgForm) {

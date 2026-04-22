@@ -46,7 +46,13 @@ export class AppComponent implements OnInit {
     });
 
     setInterval(() => {
-      this.swUpdate.checkForUpdate();
+      try {
+        if (this.swUpdate.isEnabled) {
+          this.swUpdate.checkForUpdate();
+        }
+      } catch (e) {
+        // service worker dev mode'da disabled — sessizce geç
+      }
     }, 10000);
   }
 
